@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_c3AF0MjYEeSyMNYR5xypkQ" elementId="org.achg.graveindex.product" bindingContexts="_c3AF2cjYEeSyMNYR5xypkQ">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_c3AF0cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.window.main" label="Grave Indexer" width="500" height="400">
+    <children xsi:type="advanced:PerspectiveStack" xmi:id="_ymF3AP9uEeeBd6xljnEhzw" elementId="org.achg.graveindex.perspectivestack">
+      <children xsi:type="advanced:Perspective" xmi:id="_zvyqAP9uEeeBd6xljnEhzw" elementId="org.achg.graveindex.perspective.default" label="Default">
+        <children xsi:type="basic:PartSashContainer" xmi:id="_7GyswP9uEeeBd6xljnEhzw" elementId="org.achg.graveindex.partsashcontainer.topPartSash" horizontal="true">
+          <children xsi:type="basic:PartSashContainer" xmi:id="_CQiWoP9vEeeBd6xljnEhzw" elementId="org.achg.graveindex.partsashcontainer.0">
+            <children xsi:type="basic:Part" xmi:id="_99qMMP9uEeeBd6xljnEhzw" elementId="org.achg.graveindex.part.InputFileInfoView" containerData="300" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.views.InputFileInfoView" label="Input File Info View"/>
+            <children xsi:type="basic:Part" xmi:id="_7LPAYAD5EeiBd6xljnEhzw" elementId="org.achg.graveindex.part.InpuRecordView" containerData="700" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.views.InputRecordView" label="Input Record View"/>
+          </children>
+        </children>
+      </children>
+    </children>
+    <mainMenu xmi:id="_TWzO4P69EeeGKplB7chRXg" elementId="org.achg.graveindex.menu.0">
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_g0otAP69EeeGKplB7chRXg" elementId="org.achg.graveindex.handledmenuitem.exit" label="Exit" command="_WA1zQP69EeeGKplB7chRXg"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_b5tOoP6-EeeGKplB7chRXg" elementId="org.achg.graveindex.handledmenuitem.openFile" label="Open File" command="_TRPkAP6-EeeGKplB7chRXg"/>
+    </mainMenu>
+  </children>
+  <handlers xmi:id="_ZNmDIP69EeeGKplB7chRXg" elementId="org.achg.graveindex.handler.exitHandler" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.handlers.ExitHandler" command="_WA1zQP69EeeGKplB7chRXg"/>
+  <handlers xmi:id="_V05MgP6-EeeGKplB7chRXg" elementId="org.achg.graveindex.handler.openFile" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.handlers.OpenFileHandler" command="_TRPkAP6-EeeGKplB7chRXg"/>
+  <rootContext xmi:id="_c3AF2cjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
+    <children xmi:id="_c3AF2sjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
+    <children xmi:id="_c3AF28jYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
+  </rootContext>
+  <commands xmi:id="_WA1zQP69EeeGKplB7chRXg" elementId="org.achg.graveindex.command.exit" commandName="Exit" description="Exit"/>
+  <commands xmi:id="_TRPkAP6-EeeGKplB7chRXg" elementId="org.achg.graveindex.command.openFile" commandName="Open File"/>
+  <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
+  <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
+  <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
+  <addons xmi:id="_c3AF1cjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.commands.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.CommandProcessingAddon"/>
+  <addons xmi:id="_c3AF1sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.handler.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.HandlerProcessingAddon"/>
+  <addons xmi:id="_c3AF18jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.contexts.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench/org.eclipse.e4.ui.internal.workbench.addons.ContextProcessingAddon"/>
+  <addons xmi:id="_c3AF2MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.workbench.bindings.model" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.swt/org.eclipse.e4.ui.workbench.swt.util.BindingProcessingAddon"/>
+</application:Application>
