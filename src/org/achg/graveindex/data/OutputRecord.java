@@ -4,13 +4,13 @@ public class OutputRecord {
 	public String _forename = "";
 	public String _surname = "";
 	public boolean _bornCirca = false;
-	public String _bornDay = "";
-	public String _bornMonth = "";
-	public String _bornYear = "";
-	public String _diedDay = "";
-	public String _diedMonth = "";
-	public String _diedYear = "";
+	public int _bornDay = 0;
+	public int _bornMonth = 0;
+	public int _bornYear = 0;
+	public int _diedDay = 0;
+	public int _diedMonth = 0;
+	public int _diedYear = 0;
 	public String _clause = "";
 	public String _fullText = "";
-	public String _scrbbedFullText = "";
+	public String _scrubbedFullText = "";
 }

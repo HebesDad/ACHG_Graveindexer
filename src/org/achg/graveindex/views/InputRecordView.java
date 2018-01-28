@@ -1,5 +1,8 @@
 package org.achg.graveindex.views;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.annotation.PostConstruct;
 
 import org.achg.graveindex.data.DataManager;
@@ -7,8 +10,6 @@ import org.achg.graveindex.data.IInputRecordListener;
 import org.achg.graveindex.data.InputRecord;
 import org.achg.graveindex.data.OutputRecord;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -19,7 +20,17 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 public class InputRecordView implements IInputRecordListener {
-private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
+
+	private final Pattern[] DROSS = { Pattern.compile("R.I.P.", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("Rest in peace", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("In loving remembrance", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("And their", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("And his", Pattern.CASE_INSENSITIVE), Pattern.compile("And her", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("And", Pattern.CASE_INSENSITIVE), Pattern.compile("His", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("Her", Pattern.CASE_INSENSITIVE), Pattern.compile("Their", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("Also", Pattern.CASE_INSENSITIVE) ,Pattern.compile("Son", Pattern.CASE_INSENSITIVE),Pattern.compile("Daughter", Pattern.CASE_INSENSITIVE),Pattern.compile("Husband", Pattern.CASE_INSENSITIVE),Pattern.compile("Wife", Pattern.CASE_INSENSITIVE)};
+
+	private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
 	private Label _recordNumberLabel;
 	private Text _inputRecordText;
 
@@ -88,29 +99,37 @@ private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
 
 		DataManager.getInstance().addInputRecordListener(this);
 	}
-	
-	private void createOutputRecords()
-	{
+
+	private void createOutputRecords() {
 		int currentIndex = DataManager.getInstance().getInputFile().getCurrentRecordNumber();
 		String workingCopy = DataManager.getInstance().getInputFile()._inputRecords
 				.get(currentIndex)._manipulatedTranscription;
-		
+
 		String[] parts = workingCopy.split(SPLIT_MARKER);
 		String[] scrubbedParts = scrubOutputRecordDross(parts);
-		InputRecord inputRecord = DataManager.getInstance().getInputFile()._inputRecords
-		.get(currentIndex);
-		for (int i = 0; i<parts.length;i++)
-		{
-			OutputRecord outputRecord = new OutputRecord();
-			outputRecord._fullText=parts[i];
-			outputRecord._scrbbedFullText = scrubbedParts[i];
-			inputRecord._outputRecords.add(outputRecord);
+		InputRecord inputRecord = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex);
+		for (int i = 0; i < parts.length; i++) {
+			if (!parts[i].isEmpty()) {
+				OutputRecord outputRecord = new OutputRecord();
+				outputRecord._fullText = parts[i];
+				outputRecord._scrubbedFullText = scrubbedParts[i];
+				inputRecord._outputRecords.add(outputRecord);
+			}
 		}
 		DataManager.getInstance().notifyListenersOutputRecordsAvailable();
 	}
 
 	private String[] scrubOutputRecordDross(String[] parts) {
 		String outputs[] = new String[parts.length];
+
+		for (int i = 0; i < parts.length; i++) {
+			String part = parts[i];
+			for (Pattern dross : DROSS) {
+				Matcher match = dross.matcher(part);
+				part = match.replaceAll("").trim();
+			}
+			outputs[i] = part;
+		}
 		return outputs;
 	}
 
@@ -132,15 +151,14 @@ private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
 		int currentIndex = DataManager.getInstance().getInputFile().getCurrentRecordNumber();
 		_recordNumberLabel.setText(String.format("%d", currentIndex));
 
-		String workingCopy = DataManager.getInstance().getInputFile()._inputRecords
-						.get(currentIndex)._cells.get(DataManager.getInstance().getInputFile().getMainCellNumber())
-								.replaceAll(" / ", "\r\n");
-		
+		String workingCopy = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
+				.get(DataManager.getInstance().getInputFile().getMainCellNumber()).replaceAll(" / ", "\r\n");
+
 		workingCopy = automaticSplit(workingCopy);
 
 		DataManager.getInstance().getInputFile()._inputRecords
-		.get(currentIndex)._manipulatedTranscription = workingCopy;
-		
+				.get(currentIndex)._manipulatedTranscription = workingCopy;
+
 		_inputRecordText.setText(
 				DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._manipulatedTranscription);
 

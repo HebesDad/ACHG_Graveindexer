@@ -22,6 +22,7 @@ public class DataManager {
 	private InputFile _file = null;
 	private List<IDataLoadListener> _loadListeners = new ArrayList<>();
 	private List<IInputRecordListener> _inputListeners = new ArrayList<>();
+	private List<IOutputRecordListener> _outputListeners = new ArrayList<>();
 	
 	private DataManager() {
 
@@ -113,6 +114,20 @@ public class DataManager {
 		}
 		
 		notifyListenersInputRecordIndexChanged();
+	}
+
+	public void addOutputRecordListener(IOutputRecordListener listener)
+	{
+		_outputListeners.add(listener);
+	}
+
+
+	public void notifyListenersOutputRecordsAvailable() {
+		for (IOutputRecordListener listener:_outputListeners)
+		{
+			listener.notifyNewSetAvailable();
+		}
+		
 	}
 
 }
