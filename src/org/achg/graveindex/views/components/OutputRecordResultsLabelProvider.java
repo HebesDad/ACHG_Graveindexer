@@ -13,7 +13,7 @@ public class OutputRecordResultsLabelProvider extends LabelProvider {
 			StringBuilder sb = new StringBuilder();
 			
 			sb.append("fn="); sb.append(record._forename); sb.append(", ");
-			sb.append("sn="); sb.append(record._forename); sb.append(", ");
+			sb.append("sn="); sb.append(record._surname); sb.append(", ");
 			if (record._bornCirca)
 			{
 				sb.append("born circa "); sb.append(record._bornYear); sb.append(", ");
@@ -22,7 +22,7 @@ public class OutputRecordResultsLabelProvider extends LabelProvider {
 			{
 				sb.append(String.format("born %d/%d/%d, ", record._bornDay,record._bornMonth,record._bornYear));
 			}
-			sb.append(String.format("died %d/%d/%d", record._bornDay,record._bornMonth,record._bornYear));
+			sb.append(String.format("died %d/%d/%d", record._diedDay,record._diedMonth,record._diedYear));
 			
 			
 			return sb.toString();

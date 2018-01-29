@@ -9,6 +9,7 @@ import org.achg.graveindex.data.DataManager;
 import org.achg.graveindex.data.IInputRecordListener;
 import org.achg.graveindex.data.InputRecord;
 import org.achg.graveindex.data.OutputRecord;
+import org.achg.graveindex.data.OutputRecordDetailExtractor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -33,6 +34,7 @@ public class InputRecordView implements IInputRecordListener {
 	private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
 	private Label _recordNumberLabel;
 	private Text _inputRecordText;
+	private OutputRecordDetailExtractor _extractor = new OutputRecordDetailExtractor();
 
 	@PostConstruct
 	public void create(Composite viewParent) {
@@ -113,6 +115,7 @@ public class InputRecordView implements IInputRecordListener {
 				OutputRecord outputRecord = new OutputRecord();
 				outputRecord._fullText = parts[i];
 				outputRecord._scrubbedFullText = scrubbedParts[i];
+				_extractor.extractDetails(outputRecord);
 				inputRecord._outputRecords.add(outputRecord);
 			}
 		}
