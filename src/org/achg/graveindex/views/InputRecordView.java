@@ -22,14 +22,26 @@ import org.eclipse.swt.widgets.Text;
 
 public class InputRecordView implements IInputRecordListener {
 
-	private final Pattern[] DROSS = { Pattern.compile("R.I.P.", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("Rest in peace", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("In loving remembrance", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("And their", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("And his", Pattern.CASE_INSENSITIVE), Pattern.compile("And her", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("And", Pattern.CASE_INSENSITIVE), Pattern.compile("His", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("Her", Pattern.CASE_INSENSITIVE), Pattern.compile("Their", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("Also", Pattern.CASE_INSENSITIVE) ,Pattern.compile("Son", Pattern.CASE_INSENSITIVE),Pattern.compile("Daughter", Pattern.CASE_INSENSITIVE),Pattern.compile("Husband", Pattern.CASE_INSENSITIVE),Pattern.compile("Wife", Pattern.CASE_INSENSITIVE)};
+	private final Pattern[] DROSS = { Pattern.compile("R\\.I\\.P\\.?", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("Rest\\s+in\\s+peace", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(In)?(\\s+ever)?\\s+loving\\s+remembrance", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(In)?(\\s+ever)?(\\s+loving)?\\s+memory\\s+of", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(In)?(\\s+ever)?\\s+(loving\\s)?+memory\\s+", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(In)?(\\s+ever)?\\s+loving\\s+memories\\s+", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("At\\s+peace", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("And\\s+(devoted\\s+)?their", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("And\\s+(devoted\\s+)?his", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("And\\s+(devoted\\s+)?her", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("\\sHis(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
+			
+			Pattern.compile("Their(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("Also", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(devoted\\s+)?Son", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(devoted\\s+)?Daughter", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(devoted\\s+)?Husband", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(devoted\\s+)?Father", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(devoted\\s+)?Wife", Pattern.CASE_INSENSITIVE),Pattern.compile("\\sHer(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("\\sAnd", Pattern.CASE_INSENSITIVE) };
 
 	private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
 	private Label _recordNumberLabel;
@@ -38,7 +50,7 @@ public class InputRecordView implements IInputRecordListener {
 
 	@PostConstruct
 	public void create(Composite viewParent) {
-		GridLayout layout = new GridLayout(4, false);
+		GridLayout layout = new GridLayout(6, false);
 		viewParent.setLayout(layout);
 
 		Label lab = new Label(viewParent, SWT.NONE);
@@ -47,9 +59,29 @@ public class InputRecordView implements IInputRecordListener {
 		lab.setLayoutData(gd);
 		lab.setText("Record Number:");
 
-		_recordNumberLabel = new Label(viewParent, SWT.FILL);
+		_recordNumberLabel = new Label(viewParent, SWT.NONE);
 		gd = new GridData(SWT.LEFT, SWT.TOP, true, false);
 		_recordNumberLabel.setLayoutData(gd);
+		_recordNumberLabel.setText("---------------");
+
+		Button insertSplitButton = new Button(viewParent, SWT.NONE);
+		insertSplitButton.setText("Insert a Split");
+		insertSplitButton.setToolTipText("inserts a split at cursor position");
+		insertSplitButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				insertSplit();
+			}
+		});
+
+		Button recordButton = new Button(viewParent, SWT.NONE);
+		recordButton.setText("Create Output Records");
+		recordButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				createOutputRecords();
+			}
+		});
 
 		Button prevButton = new Button(viewParent, SWT.NONE);
 		gd = new GridData(SWT.RIGHT, SWT.TOP, false, false);
@@ -80,25 +112,6 @@ public class InputRecordView implements IInputRecordListener {
 		gd.horizontalSpan = 4;
 		_inputRecordText.setLayoutData(gd);
 
-		Button insertSplitButton = new Button(viewParent, SWT.NONE);
-		insertSplitButton.setText("Insert a Split");
-		insertSplitButton.setToolTipText("inserts a split at cursor position");
-		insertSplitButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				insertSplit();
-			}
-		});
-
-		Button recordButton = new Button(viewParent, SWT.NONE);
-		recordButton.setText("Create Output Records");
-		recordButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				createOutputRecords();
-			}
-		});
-
 		DataManager.getInstance().addInputRecordListener(this);
 	}
 
@@ -110,6 +123,7 @@ public class InputRecordView implements IInputRecordListener {
 		String[] parts = workingCopy.split(SPLIT_MARKER);
 		String[] scrubbedParts = scrubOutputRecordDross(parts);
 		InputRecord inputRecord = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex);
+		inputRecord._outputRecords.clear();
 		for (int i = 0; i < parts.length; i++) {
 			if (!parts[i].isEmpty()) {
 				OutputRecord outputRecord = new OutputRecord();
@@ -127,6 +141,7 @@ public class InputRecordView implements IInputRecordListener {
 
 		for (int i = 0; i < parts.length; i++) {
 			String part = parts[i];
+			part = part.replaceFirst("Who\\s+died", "died");
 			for (Pattern dross : DROSS) {
 				Matcher match = dross.matcher(part);
 				part = match.replaceAll("").trim();
@@ -153,6 +168,7 @@ public class InputRecordView implements IInputRecordListener {
 	public void currentIndexChanged() {
 		int currentIndex = DataManager.getInstance().getInputFile().getCurrentRecordNumber();
 		_recordNumberLabel.setText(String.format("%d", currentIndex));
+		// _recordNumberLabel.requestLayout();
 
 		String workingCopy = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
 				.get(DataManager.getInstance().getInputFile().getMainCellNumber()).replaceAll(" / ", "\r\n");

@@ -88,7 +88,7 @@ public class OutputRecordListView implements IOutputRecordListener {
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				processTableSelection(((IStructuredSelection) _inputTableViewer.getSelection()).getFirstElement());
+				processTableSelection(((IStructuredSelection) _outputTableViewer.getSelection()).getFirstElement());
 			}
 
 		});

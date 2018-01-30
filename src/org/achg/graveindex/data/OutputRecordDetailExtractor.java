@@ -5,13 +5,23 @@ import java.util.regex.Pattern;
 
 public class OutputRecordDetailExtractor {
 
-	private static final String NN_MONTH_YYYY = "(\\d+)([a-z][a-z])?\\s+([A-Z][a-zA-Z]+)\\s+(\\d+)";
+	private static final String NN_MONTH_YYYY = "(\\d+)([a-z][a-z])?\\s+([A-Z][a-zA-Z]+)\\.?\\s+(\\d+)";
+	private static final String YYYY = "(\\d+)";
 	private static final String FORENAME_SURNAME = "(([A-Z]\\S*\\s+)+)([A-Z]\\S+)";
+	private static final String FORENAME = "([A-Z]\\S*)";
 
 	private static Pattern FULLNAME_BIRTH_DEATH_FULLDATES = Pattern
-			.compile(FORENAME_SURNAME + "\\s\\D*" + NN_MONTH_YYYY + ".*" + NN_MONTH_YYYY);
+			.compile(FORENAME_SURNAME + "\\s\\D*" + NN_MONTH_YYYY + "\\D*" + NN_MONTH_YYYY);
+	private static Pattern FULLNAME_BIRTH_DEATH_YYYY = Pattern
+			.compile(FORENAME_SURNAME + "\\s\\D*" + YYYY + "\\D*" + YYYY);
 	private static Pattern FULLNAME_DEATH_AGED = Pattern
 			.compile(FORENAME_SURNAME + "\\s\\D*" + NN_MONTH_YYYY + "\\s+[aA]ged\\s(\\d+)");
+	private static Pattern FORENAME_BIRTH_DEATH_FULLDATES = Pattern
+			.compile(FORENAME + "\\s\\D*" + NN_MONTH_YYYY + "\\D*" + NN_MONTH_YYYY);
+	private static Pattern FORENAME_BIRTH_DEATH_YYYY = Pattern
+			.compile(FORENAME + "\\s\\D*" + YYYY + "\\D*" + YYYY);
+	private static Pattern FORENAME_DEATH_AGED = Pattern
+			.compile(FORENAME + "\\s\\D*" + NN_MONTH_YYYY + "\\s+[aA]ged\\s(\\d+)");
 
 	private static Pattern JANUARY = Pattern.compile("Jan(uary)?");
 	private static Pattern FEBRUARY = Pattern.compile("Feb(ruary)?");
@@ -29,7 +39,7 @@ public class OutputRecordDetailExtractor {
 	public void extractDetails(OutputRecord outputRecord) {
 		// the interesting it is outputRecord._scrubbedFullText;
 
-		String txt = outputRecord._scrubbedFullText;
+		String txt = " " + outputRecord._scrubbedFullText;
 		txt = txt.replace("born", "");
 		txt = txt.replace("Born", "");
 		txt = txt.replace("died", "");
@@ -37,8 +47,8 @@ public class OutputRecordDetailExtractor {
 
 		Matcher match = FULLNAME_DEATH_AGED.matcher(txt);
 		if (match.find()) {
-			outputRecord._forename = match.group(1);
-			outputRecord._surname = match.group(3);
+			outputRecord._forename = match.group(1).trim();
+			outputRecord._surname = match.group(3).trim();
 			outputRecord._bornCirca = true;
 			outputRecord._diedDay = safeParseInt(match.group(4));
 			outputRecord._diedMonth = convertMonth(match.group(6));
@@ -55,12 +65,63 @@ public class OutputRecordDetailExtractor {
 			outputRecord._surname = match.group(3).trim();
 			outputRecord._bornCirca = false;
 			outputRecord._bornDay = safeParseInt(match.group(4));
-			outputRecord._bornMonth = convertMonth(match.group(5));
-			outputRecord._bornYear = safeParseInt(match.group(6));
+			outputRecord._bornMonth = convertMonth(match.group(6));
+			outputRecord._bornYear = safeParseInt(match.group(7));
 
-			outputRecord._diedDay = safeParseInt(match.group(7));
+			outputRecord._diedDay = safeParseInt(match.group(8));
+			outputRecord._diedMonth = convertMonth(match.group(10));
+			outputRecord._diedYear = safeParseInt(match.group(11));
+
+			return;
+		}
+
+		match = FULLNAME_BIRTH_DEATH_YYYY.matcher(txt);
+		if (match.find()) {
+			outputRecord._forename = match.group(1).trim();
+			outputRecord._surname = match.group(3).trim();
+			outputRecord._bornCirca = false;
+			outputRecord._bornYear = safeParseInt(match.group(4));
+
+			outputRecord._diedYear = safeParseInt(match.group(5));
+
+			return;
+		}
+		
+		match = FORENAME_DEATH_AGED.matcher(txt);
+		if (match.find()) {
+			outputRecord._forename = match.group(1).trim();
+			outputRecord._bornCirca = true;
+			outputRecord._diedDay = safeParseInt(match.group(2));
+			outputRecord._diedMonth = convertMonth(match.group(4));
+			outputRecord._diedYear = safeParseInt(match.group(5));
+			int age = safeParseInt(match.group(6));
+			outputRecord._bornYear = outputRecord._diedYear - age;
+			outputRecord._bornDay = 0;
+			outputRecord._bornMonth = 0;
+			return;
+		}
+		match = FORENAME_BIRTH_DEATH_FULLDATES.matcher(txt);
+		if (match.find()) {
+			outputRecord._forename = match.group(1).trim();
+			outputRecord._bornCirca = false;
+			outputRecord._bornDay = safeParseInt(match.group(2));
+			outputRecord._bornMonth = convertMonth(match.group(4));
+			outputRecord._bornYear = safeParseInt(match.group(5));
+
+			outputRecord._diedDay = safeParseInt(match.group(6));
 			outputRecord._diedMonth = convertMonth(match.group(8));
 			outputRecord._diedYear = safeParseInt(match.group(9));
+
+			return;
+		}
+
+		match = FORENAME_BIRTH_DEATH_YYYY.matcher(txt);
+		if (match.find()) {
+			outputRecord._forename = match.group(1).trim();
+			outputRecord._bornCirca = false;
+			outputRecord._bornYear = safeParseInt(match.group(2));
+
+			outputRecord._diedYear = safeParseInt(match.group(3));
 
 			return;
 		}
