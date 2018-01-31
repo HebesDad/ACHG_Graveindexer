@@ -9,7 +9,7 @@ public class OutputRecordLabelProvider extends LabelProvider {
 	{
 		if (element instanceof OutputRecord)
 		{
-			return ((OutputRecord) element)._fullText.replaceAll("\r\n", " ");
+			return ((OutputRecord) element)._fullText.replaceAll("\r\n", " ").replaceAll("\\s+", " ");
 		}
 		return null;
 	}

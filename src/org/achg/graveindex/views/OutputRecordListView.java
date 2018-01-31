@@ -5,6 +5,7 @@ import javax.annotation.PostConstruct;
 import org.achg.graveindex.data.DataManager;
 import org.achg.graveindex.data.IOutputRecordListener;
 import org.achg.graveindex.data.OutputRecord;
+import org.achg.graveindex.views.components.IntegerUtils;
 import org.achg.graveindex.views.components.OutputRecordLabelProvider;
 import org.achg.graveindex.views.components.OutputRecordResultsLabelProvider;
 import org.achg.graveindex.views.components.OutputRecordsContentProvider;
@@ -104,7 +105,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._forename = _forenameTxt.getText();
+					_currentOutputRecord._forename = _forenameTxt.getText().trim();
+					refreshTables();
 				}
 			}
 		});
@@ -120,7 +122,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._surname = _surnameTxt.getText();
+					_currentOutputRecord._surname = _surnameTxt.getText().trim();
+					refreshTables();
 				}
 			}
 		});
@@ -138,6 +141,7 @@ public class OutputRecordListView implements IOutputRecordListener {
 					_bornDayTxt.setEnabled(true);
 					_bornMonthTxt.setEnabled(true);
 				}
+				refreshTables();
 			}
 		});
 
@@ -152,7 +156,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._bornDay = Integer.parseInt(_bornDayTxt.getText());
+					_currentOutputRecord._bornDay = IntegerUtils.safeParseInt(_bornDayTxt.getText());
+					refreshTables();
 				}
 			}
 		});
@@ -168,7 +173,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._bornMonth = Integer.parseInt(_bornMonthTxt.getText());
+					_currentOutputRecord._bornMonth = IntegerUtils.safeParseInt(_bornMonthTxt.getText());
+					refreshTables();
 				}
 			}
 		});
@@ -184,7 +190,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._bornYear = Integer.parseInt(_bornYearTxt.getText());
+					_currentOutputRecord._bornYear = IntegerUtils.safeParseInt(_bornYearTxt.getText());
+					refreshTables();
 				}
 			}
 		});
@@ -200,7 +207,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._diedDay = Integer.parseInt(_diedDayTxt.getText());
+					_currentOutputRecord._diedDay = IntegerUtils.safeParseInt(_diedDayTxt.getText());
+					refreshTables();
 				}
 			}
 		});
@@ -216,7 +224,8 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._diedMonth = Integer.parseInt(_diedMonthTxt.getText());
+					_currentOutputRecord._diedMonth = IntegerUtils.safeParseInt(_diedMonthTxt.getText());
+					refreshTables();
 				}
 			}
 		});
@@ -232,12 +241,18 @@ public class OutputRecordListView implements IOutputRecordListener {
 			@Override
 			public void modifyText(ModifyEvent e) {
 				if (_currentOutputRecord != null) {
-					_currentOutputRecord._diedYear = Integer.parseInt(_diedYearTxt.getText());
+					_currentOutputRecord._diedYear = IntegerUtils.safeParseInt(_diedYearTxt.getText());
+					refreshTables();
 				}
 			}
 		});
 
 		DataManager.getInstance().addOutputRecordListener(this);
+	}
+
+	private void refreshTables() {
+		_inputTableViewer.refresh();
+		_outputTableViewer.refresh();
 	}
 
 	public void processTableSelection(Object object) {

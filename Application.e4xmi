@@ -17,16 +17,19 @@
     <mainMenu xmi:id="_TWzO4P69EeeGKplB7chRXg" elementId="org.achg.graveindex.menu.0">
       <children xsi:type="menu:HandledMenuItem" xmi:id="_g0otAP69EeeGKplB7chRXg" elementId="org.achg.graveindex.handledmenuitem.exit" label="Exit" command="_WA1zQP69EeeGKplB7chRXg"/>
       <children xsi:type="menu:HandledMenuItem" xmi:id="_b5tOoP6-EeeGKplB7chRXg" elementId="org.achg.graveindex.handledmenuitem.openFile" label="Open File" command="_TRPkAP6-EeeGKplB7chRXg"/>
+      <children xsi:type="menu:HandledMenuItem" xmi:id="_2oplwAZ6EeiBd6xljnEhzw" elementId="org.achg.graveindex.handledmenuitem.save" label="Save" command="_xVPLYAZ6EeiBd6xljnEhzw"/>
     </mainMenu>
   </children>
   <handlers xmi:id="_ZNmDIP69EeeGKplB7chRXg" elementId="org.achg.graveindex.handler.exitHandler" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.handlers.ExitHandler" command="_WA1zQP69EeeGKplB7chRXg"/>
   <handlers xmi:id="_V05MgP6-EeeGKplB7chRXg" elementId="org.achg.graveindex.handler.openFile" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.handlers.OpenFileHandler" command="_TRPkAP6-EeeGKplB7chRXg"/>
+  <handlers xmi:id="_zlRUUAZ6EeiBd6xljnEhzw" elementId="org.achg.graveindex.handler.save" contributionURI="bundleclass://org.achg.graveindex/org.achg.graveindex.handlers.SaveHandler" command="_xVPLYAZ6EeiBd6xljnEhzw"/>
   <rootContext xmi:id="_c3AF2cjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
     <children xmi:id="_c3AF2sjYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>
     <children xmi:id="_c3AF28jYEeSyMNYR5xypkQ" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
   <commands xmi:id="_WA1zQP69EeeGKplB7chRXg" elementId="org.achg.graveindex.command.exit" commandName="Exit" description="Exit"/>
   <commands xmi:id="_TRPkAP6-EeeGKplB7chRXg" elementId="org.achg.graveindex.command.openFile" commandName="Open File"/>
+  <commands xmi:id="_xVPLYAZ6EeiBd6xljnEhzw" elementId="org.achg.graveindex.command.save" commandName="Save" description="Save"/>
   <addons xmi:id="_c3AF0sjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_c3AF08jYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_c3AF1MjYEeSyMNYR5xypkQ" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>

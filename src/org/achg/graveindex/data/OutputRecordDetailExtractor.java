@@ -3,12 +3,14 @@ package org.achg.graveindex.data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.achg.graveindex.views.components.IntegerUtils;
+
 public class OutputRecordDetailExtractor {
 
 	private static final String NN_MONTH_YYYY = "(\\d+)([a-z][a-z])?\\s+([A-Z][a-zA-Z]+)\\.?\\s+(\\d+)";
 	private static final String YYYY = "(\\d+)";
-	private static final String FORENAME_SURNAME = "(([A-Z]\\S*\\s+)+)([A-Z]\\S+)";
-	private static final String FORENAME = "([A-Z]\\S*)";
+	private static final String FORENAME_SURNAME = "(([A-Z\\(']\\S*\\s+)+)([A-Z\\(']\\S+)";
+	private static final String FORENAME = "([A-Z\\(']\\S*)";
 
 	private static Pattern FULLNAME_BIRTH_DEATH_FULLDATES = Pattern
 			.compile(FORENAME_SURNAME + "\\s\\D*" + NN_MONTH_YYYY + "\\D*" + NN_MONTH_YYYY);
@@ -50,10 +52,10 @@ public class OutputRecordDetailExtractor {
 			outputRecord._forename = match.group(1).trim();
 			outputRecord._surname = match.group(3).trim();
 			outputRecord._bornCirca = true;
-			outputRecord._diedDay = safeParseInt(match.group(4));
+			outputRecord._diedDay = IntegerUtils.safeParseInt(match.group(4));
 			outputRecord._diedMonth = convertMonth(match.group(6));
-			outputRecord._diedYear = safeParseInt(match.group(7));
-			int age = safeParseInt(match.group(8));
+			outputRecord._diedYear = IntegerUtils.safeParseInt(match.group(7));
+			int age = IntegerUtils.safeParseInt(match.group(8));
 			outputRecord._bornYear = outputRecord._diedYear - age;
 			outputRecord._bornDay = 0;
 			outputRecord._bornMonth = 0;
@@ -64,13 +66,13 @@ public class OutputRecordDetailExtractor {
 			outputRecord._forename = match.group(1).trim();
 			outputRecord._surname = match.group(3).trim();
 			outputRecord._bornCirca = false;
-			outputRecord._bornDay = safeParseInt(match.group(4));
+			outputRecord._bornDay = IntegerUtils.safeParseInt(match.group(4));
 			outputRecord._bornMonth = convertMonth(match.group(6));
-			outputRecord._bornYear = safeParseInt(match.group(7));
+			outputRecord._bornYear = IntegerUtils.safeParseInt(match.group(7));
 
-			outputRecord._diedDay = safeParseInt(match.group(8));
+			outputRecord._diedDay = IntegerUtils.safeParseInt(match.group(8));
 			outputRecord._diedMonth = convertMonth(match.group(10));
-			outputRecord._diedYear = safeParseInt(match.group(11));
+			outputRecord._diedYear = IntegerUtils.safeParseInt(match.group(11));
 
 			return;
 		}
@@ -80,9 +82,9 @@ public class OutputRecordDetailExtractor {
 			outputRecord._forename = match.group(1).trim();
 			outputRecord._surname = match.group(3).trim();
 			outputRecord._bornCirca = false;
-			outputRecord._bornYear = safeParseInt(match.group(4));
+			outputRecord._bornYear = IntegerUtils.safeParseInt(match.group(4));
 
-			outputRecord._diedYear = safeParseInt(match.group(5));
+			outputRecord._diedYear = IntegerUtils.safeParseInt(match.group(5));
 
 			return;
 		}
@@ -91,10 +93,10 @@ public class OutputRecordDetailExtractor {
 		if (match.find()) {
 			outputRecord._forename = match.group(1).trim();
 			outputRecord._bornCirca = true;
-			outputRecord._diedDay = safeParseInt(match.group(2));
+			outputRecord._diedDay = IntegerUtils.safeParseInt(match.group(2));
 			outputRecord._diedMonth = convertMonth(match.group(4));
-			outputRecord._diedYear = safeParseInt(match.group(5));
-			int age = safeParseInt(match.group(6));
+			outputRecord._diedYear = IntegerUtils.safeParseInt(match.group(5));
+			int age = IntegerUtils.safeParseInt(match.group(6));
 			outputRecord._bornYear = outputRecord._diedYear - age;
 			outputRecord._bornDay = 0;
 			outputRecord._bornMonth = 0;
@@ -104,13 +106,13 @@ public class OutputRecordDetailExtractor {
 		if (match.find()) {
 			outputRecord._forename = match.group(1).trim();
 			outputRecord._bornCirca = false;
-			outputRecord._bornDay = safeParseInt(match.group(2));
+			outputRecord._bornDay = IntegerUtils.safeParseInt(match.group(2));
 			outputRecord._bornMonth = convertMonth(match.group(4));
-			outputRecord._bornYear = safeParseInt(match.group(5));
+			outputRecord._bornYear = IntegerUtils.safeParseInt(match.group(5));
 
-			outputRecord._diedDay = safeParseInt(match.group(6));
+			outputRecord._diedDay = IntegerUtils.safeParseInt(match.group(6));
 			outputRecord._diedMonth = convertMonth(match.group(8));
-			outputRecord._diedYear = safeParseInt(match.group(9));
+			outputRecord._diedYear = IntegerUtils.safeParseInt(match.group(9));
 
 			return;
 		}
@@ -119,24 +121,15 @@ public class OutputRecordDetailExtractor {
 		if (match.find()) {
 			outputRecord._forename = match.group(1).trim();
 			outputRecord._bornCirca = false;
-			outputRecord._bornYear = safeParseInt(match.group(2));
+			outputRecord._bornYear = IntegerUtils.safeParseInt(match.group(2));
 
-			outputRecord._diedYear = safeParseInt(match.group(3));
+			outputRecord._diedYear = IntegerUtils.safeParseInt(match.group(3));
 
 			return;
 		}
 
 	}
 
-	private int safeParseInt(String str) {
-		int i = 0;
-		try {
-			i = Integer.parseInt(str);
-		} catch (NumberFormatException ex) {
-			//
-		}
-		return i;
-	}
 
 	private int convertMonth(String group) {
 		if (JANUARY.matcher(group).find())

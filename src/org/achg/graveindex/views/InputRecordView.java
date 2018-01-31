@@ -26,14 +26,15 @@ public class InputRecordView implements IInputRecordListener {
 			Pattern.compile("Rest\\s+in\\s+peace", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(In)?(\\s+ever)?\\s+loving\\s+remembrance", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(In)?(\\s+ever)?(\\s+loving)?\\s+memory\\s+of", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(Treasured\\s+)?memories\\s+of", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(In)?(\\s+ever)?\\s+(loving\\s)?+memory\\s+", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(In)?(\\s+ever)?\\s+loving\\s+memories\\s+", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("At\\s+peace", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("And\\s+(devoted\\s+)?their", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("And\\s+(devoted\\s+)?his", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("And\\s+(devoted\\s+)?her", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("\\sHis(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
-			
+			Pattern.compile("\\sHis(\\s+devoted)?(\\s+wife)?", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("\\spassed\\s+away", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("Their(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("Also", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(devoted\\s+)?Son", Pattern.CASE_INSENSITIVE),
@@ -83,6 +84,17 @@ public class InputRecordView implements IInputRecordListener {
 			}
 		});
 
+		Button nextButton = new Button(viewParent, SWT.NONE);
+		gd = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+		nextButton.setLayoutData(gd);
+		nextButton.setText("Next");
+		nextButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				DataManager.getInstance().getInputFile().incrementCurrentRecordNumber();
+			}
+		});
+		
 		Button prevButton = new Button(viewParent, SWT.NONE);
 		gd = new GridData(SWT.RIGHT, SWT.TOP, false, false);
 		prevButton.setLayoutData(gd);
@@ -94,16 +106,7 @@ public class InputRecordView implements IInputRecordListener {
 			}
 		});
 
-		Button nextButton = new Button(viewParent, SWT.NONE);
-		gd = new GridData(SWT.RIGHT, SWT.TOP, false, false);
-		nextButton.setLayoutData(gd);
-		nextButton.setText("Next");
-		nextButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				DataManager.getInstance().getInputFile().incrementCurrentRecordNumber();
-			}
-		});
+	
 
 		_inputRecordText = new Text(viewParent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		_inputRecordText.setEditable(false);
@@ -130,6 +133,8 @@ public class InputRecordView implements IInputRecordListener {
 				outputRecord._fullText = parts[i];
 				outputRecord._scrubbedFullText = scrubbedParts[i];
 				_extractor.extractDetails(outputRecord);
+				outputRecord._forename = outputRecord._forename.replaceAll("\\s+", " ");
+				outputRecord._surname = outputRecord._surname.replaceAll("\\s+", " ");
 				inputRecord._outputRecords.add(outputRecord);
 			}
 		}

@@ -1,7 +1,9 @@
 package org.achg.graveindex.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InputFile {
 	private String _filename;
@@ -79,6 +81,53 @@ public class InputFile {
 			}
 		}
 		return cellNumber;
+	}
+
+	public Map<String, String[]> generateXlsxData() {
+		int rowNum = 1;
+		
+		Map<String,String[]> map = new HashMap<>();
+		for (InputRecord inputRecord:_inputRecords)
+		{
+			for (OutputRecord outputField:inputRecord._outputRecords)
+			{
+				List<String> cells = new ArrayList<>();
+				
+				if (!inputRecord._outputRecords.isEmpty())
+				{for(String extra:_extraFields)
+				{
+					cells.add(extra);
+				}
+				
+				for (int i = 0 ; i<_inputFields.size(); i++)
+				{
+					if (_inputFields.get(i)._outputField)
+					{
+						cells.add(inputRecord._cells.get(i));
+					}
+				}
+				 
+				for (OutputRecord record:inputRecord._outputRecords)
+				{
+					cells.add(record._forename);
+					cells.add(record._surname)
+					;
+					cells.add(Boolean.valueOf(record._bornCirca).toString());
+					cells.add(String.format("%d", record._bornDay));
+					cells.add(String.format("%d", record._bornMonth));
+					cells.add(String.format("%d", record._bornYear));
+					cells.add(String.format("%d", record._diedDay));
+					cells.add(String.format("%d", record._diedMonth));
+					cells.add(String.format("%d", record._diedYear));
+				}
+				
+				
+				
+				map.put(String.format("%d", rowNum), cells.toArray(new String[cells.size()]));
+				rowNum++;}
+			}
+		}
+		return map;
 	}
 	
 	
