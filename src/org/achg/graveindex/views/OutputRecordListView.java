@@ -261,13 +261,32 @@ public class OutputRecordListView implements IOutputRecordListener {
 			_forenameTxt.setText(_currentOutputRecord._forename);
 			_surnameTxt.setText(_currentOutputRecord._surname);
 			_circaCheckbox.setSelection(_currentOutputRecord._bornCirca);
-			_bornDayTxt.setText(String.format("%d", _currentOutputRecord._bornDay));
-			_bornMonthTxt.setText(String.format("%d", _currentOutputRecord._bornMonth));
-			_bornYearTxt.setText(String.format("%d", _currentOutputRecord._bornYear));
+			if (_currentOutputRecord._bornDay > 0)
+				_bornDayTxt.setText(String.format("%d", _currentOutputRecord._bornDay));
+			else
+				_bornDayTxt.setText("");
+			if (_currentOutputRecord._bornMonth > 0)
+				_bornMonthTxt.setText(String.format("%d", _currentOutputRecord._bornMonth));
+			else
+				_bornMonthTxt.setText("");
+			if (_currentOutputRecord._bornYear > 0)
+				_bornYearTxt.setText(String.format("%d", _currentOutputRecord._bornYear));
+			else
+				_bornYearTxt.setText("");
 
-			_diedDayTxt.setText(String.format("%d", _currentOutputRecord._diedDay));
-			_diedMonthTxt.setText(String.format("%d", _currentOutputRecord._diedMonth));
-			_diedYearTxt.setText(String.format("%d", _currentOutputRecord._diedYear));
+			if (_currentOutputRecord._diedDay > 0)
+				_diedDayTxt.setText(String.format("%d", _currentOutputRecord._diedDay));
+			else
+				_diedDayTxt.setText("");
+			if (_currentOutputRecord._diedMonth > 0)
+				_diedMonthTxt.setText(String.format("%d", _currentOutputRecord._diedMonth));
+			else
+				_diedMonthTxt.setText("");
+			if (_currentOutputRecord._diedYear > 0)
+				_diedYearTxt.setText(String.format("%d", _currentOutputRecord._diedYear));
+			else
+				_diedYearTxt.setText("");
+
 		}
 	}
 

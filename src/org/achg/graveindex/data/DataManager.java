@@ -7,8 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -56,51 +54,55 @@ public class DataManager {
 	}
 
 	public void save() {
+		if (_file != null) {
+			List<String[]> data = _file.generateXlsxData();
 
-		Map<String, String[]> data = _file.generateXlsxData();
+			File myFile = new File(_file.getFileName().replace(".docx", ".xlsx"));
+			if (!myFile.exists())
+				try {
+					myFile.createNewFile();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
-		File myFile = new File(_file.getFileName().replace(".docx", ".xlsx"));
-		if (!myFile.exists())
-			try {
-				myFile.createNewFile();
-			} catch (IOException e1) {
+			XSSFWorkbook myWorkBook = new XSSFWorkbook();
+			XSSFSheet mySheet = myWorkBook.createSheet();
+
+			// Set to Iterate and add rows into XLS file
+
+			// get the last row number to append new data
+			int rownum = 1;
+
+			for (String[] values : data) {
+
+				// Creating a new Row in existing XLSX sheet
+				Row row = mySheet.createRow(rownum++);
+				int cellnum = 0;
+				for (String obj : values) {
+					Cell cell = row.createCell(cellnum++);
+
+					cell.setCellValue((String) obj);
+				}
+			}
+
+			// open an OutputStream to save written data into XLSX file
+			try (FileOutputStream os = new FileOutputStream(myFile)) {
+				myWorkBook.write(os);
+			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-		XSSFWorkbook myWorkBook = new XSSFWorkbook();
-		XSSFSheet mySheet = myWorkBook.createSheet();
-
-		// Set to Iterate and add rows into XLS file
-		Set<String> newRows = data.keySet();
-
-		// get the last row number to append new data
-		int rownum = mySheet.getLastRowNum();
-
-		for (String key : newRows) {
-
-			// Creating a new Row in existing XLSX sheet
-			Row row = mySheet.createRow(rownum++);
-			String[] objArr = data.get(key);
-			int cellnum = 0;
-			for (String obj : objArr) {
-				Cell cell = row.createCell(cellnum++);
-
-				cell.setCellValue((String) obj);
+			try {
+				myWorkBook.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-
-		// open an OutputStream to save written data into XLSX file
-		try (FileOutputStream os = new FileOutputStream(myFile)) {
-			myWorkBook.write(os);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 	}
 
 	public void loadFile(String file) {

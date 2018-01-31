@@ -3,6 +3,7 @@
 
 <product name="Grave Indexer" uid="org.achg.graveindex.product" id="org.achg.graveindex.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
+
    <configIni use="default">
    </configIni>
 
@@ -13,7 +14,19 @@
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages/>
+   <windowImages i16="/org.achg.graveindex/icons/gravestone16.png" i64="/org.achg.graveindex/icons/gravestone.png"/>
+
+
+   <launcher>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
+
+   <vm>
+   </vm>
+
 
    <plugins>
       <plugin id="com.ibm.icu"/>
@@ -88,5 +101,12 @@
       <plugin id="org.w3c.dom.svg"/>
    </plugins>
 
+
+   <preferencesInfo>
+      <targetfile overwrite="false"/>
+   </preferencesInfo>
+
+   <cssInfo>
+   </cssInfo>
 
 </product>

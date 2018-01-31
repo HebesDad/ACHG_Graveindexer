@@ -37,7 +37,7 @@ public class InputRecordView implements IInputRecordListener {
 			Pattern.compile("\\spassed\\s+away", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("Their(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("Also", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("(devoted\\s+)?Son", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("\\s(devoted\\s+)?Son", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(devoted\\s+)?Daughter", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(devoted\\s+)?Husband", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(devoted\\s+)?Father", Pattern.CASE_INSENSITIVE),
