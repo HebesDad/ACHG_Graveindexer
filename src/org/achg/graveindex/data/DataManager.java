@@ -13,7 +13,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFHyperlinkRun;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
@@ -120,10 +122,22 @@ public class DataManager {
 
 					for (XWPFTableCell cell : row.getTableCells()) {
 						StringBuilder sb = new StringBuilder();
-						for (XWPFParagraph para : cell.getParagraphs()) {
+						paraLoop: for (XWPFParagraph para : cell.getParagraphs()) {
+							
+							 for (XWPFRun run: para.getRuns())
+							 {
+								 if (run instanceof XWPFHyperlinkRun)
+								 {
+									 XWPFHyperlinkRun link = (XWPFHyperlinkRun) run;
+									 sb.append(link.getHyperlink(document).getURL());
+									 break paraLoop;
+								 }
+							 }
 							sb.append(para.getParagraphText());
 							sb.append(" / ");
+							
 						}
+						
 						record._cells.add(sb.toString());
 					}
 

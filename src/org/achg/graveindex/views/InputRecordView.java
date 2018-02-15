@@ -176,7 +176,7 @@ public class InputRecordView implements IInputRecordListener {
 		// _recordNumberLabel.requestLayout();
 
 		String workingCopy = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
-				.get(DataManager.getInstance().getInputFile().getMainCellNumber()).replaceAll(" / ", "\r\n");
+				.get(DataManager.getInstance().getInputFile().getMainCellNumber()).replaceAll("/ ", "\r\n");
 
 		workingCopy = automaticSplit(workingCopy);
 
