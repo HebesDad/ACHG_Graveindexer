@@ -41,12 +41,14 @@ public class InputRecordView implements IInputRecordListener {
 			Pattern.compile("(devoted\\s+)?Daughter", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(devoted\\s+)?Husband", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("(devoted\\s+)?Father", Pattern.CASE_INSENSITIVE),
-			Pattern.compile("(devoted\\s+)?Wife", Pattern.CASE_INSENSITIVE),Pattern.compile("\\sHer(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("(devoted\\s+)?Wife", Pattern.CASE_INSENSITIVE),
+			Pattern.compile("\\sHer(\\s+devoted)?", Pattern.CASE_INSENSITIVE),
 			Pattern.compile("\\sAnd", Pattern.CASE_INSENSITIVE) };
 
 	private final String SPLIT_MARKER = "\r\n<SPLIT>\r\n";
 	private Label _recordNumberLabel;
 	private Text _inputRecordText;
+	private Text _inputRecordNotesText;
 	private OutputRecordDetailExtractor _extractor = new OutputRecordDetailExtractor();
 
 	@PostConstruct
@@ -94,7 +96,7 @@ public class InputRecordView implements IInputRecordListener {
 				DataManager.getInstance().getInputFile().incrementCurrentRecordNumber();
 			}
 		});
-		
+
 		Button prevButton = new Button(viewParent, SWT.NONE);
 		gd = new GridData(SWT.RIGHT, SWT.TOP, false, false);
 		prevButton.setLayoutData(gd);
@@ -106,14 +108,20 @@ public class InputRecordView implements IInputRecordListener {
 			}
 		});
 
-	
-
 		_inputRecordText = new Text(viewParent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		_inputRecordText.setEditable(false);
 
 		gd = new GridData(SWT.FILL, SWT.FILL, true, true);
 		gd.horizontalSpan = 4;
 		_inputRecordText.setLayoutData(gd);
+
+		_inputRecordNotesText = new Text(viewParent, SWT.BORDER | SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		_inputRecordNotesText.setEditable(false);
+
+		gd = new GridData(SWT.FILL, SWT.NONE, true, true);
+		gd.horizontalSpan = 4;
+		gd.heightHint = 100;
+		_inputRecordNotesText.setLayoutData(gd);
 
 		DataManager.getInstance().addInputRecordListener(this);
 	}
@@ -173,19 +181,48 @@ public class InputRecordView implements IInputRecordListener {
 	public void currentIndexChanged() {
 		int currentIndex = DataManager.getInstance().getInputFile().getCurrentRecordNumber();
 		_recordNumberLabel.setText(String.format("%d", currentIndex));
-		// _recordNumberLabel.requestLayout();
 
-		String workingCopy = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
-				.get(DataManager.getInstance().getInputFile().getMainCellNumber()).replaceAll("/ ", "\r\n");
+		if (currentIndex < DataManager.getInstance().getInputFile()._inputRecords.size()) {
+			int transcriptionColNumber = DataManager.getInstance().getInputFile().getMainCellNumber();
+			int notesCol = DataManager.getInstance().getInputFile().getNotesCellNumber();
+			String workingCopy = DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
+					.get(DataManager.getInstance().getInputFile().getMainCellNumber()).replaceAll("/ ", "\r\n");
 
-		workingCopy = automaticSplit(workingCopy);
+			workingCopy = automaticSplit(workingCopy);
+			
+			if (workingCopy.toLowerCase().contains("no stone"))
+			{
+				StringBuilder sb = new StringBuilder();
+				sb.append(DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
+						.get(transcriptionColNumber - 1));
+				sb.append(" ");
 
-		DataManager.getInstance().getInputFile()._inputRecords
-				.get(currentIndex)._manipulatedTranscription = workingCopy;
+				sb.append(DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
+						.get(transcriptionColNumber - 2));
+				sb.append(" ");
+				sb.append(DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells.get(notesCol).replaceAll("Burial:", ""));
+				workingCopy = sb.toString().replaceAll("/", " ");
+			}
 
-		_inputRecordText.setText(
-				DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._manipulatedTranscription);
+			DataManager.getInstance().getInputFile()._inputRecords
+					.get(currentIndex)._manipulatedTranscription = workingCopy;
 
+			_inputRecordText.setText(
+					DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._manipulatedTranscription);
+
+			
+			StringBuilder sb = new StringBuilder();
+			
+			sb.append(DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
+					.get(transcriptionColNumber - 2));
+			sb.append(" ");
+			sb.append(DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells
+					.get(transcriptionColNumber - 1));
+			sb.append("\r\n");
+			sb.append(DataManager.getInstance().getInputFile()._inputRecords.get(currentIndex)._cells.get(notesCol));
+			_inputRecordNotesText.setText(sb.toString());
+		}
+		_inputRecordText.requestLayout();
 	}
 
 	private String automaticSplit(String workingCopyParam) {

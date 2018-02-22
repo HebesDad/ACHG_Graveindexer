@@ -8,6 +8,7 @@ public class InputFile {
 	private String[] _extraFields = {};
 	private int _currentRecordNumber = 0;
 	private int _mainCellNumber = -1;
+	private int _notesCellNumber = -1;
 
 	public InputFile(String file) {
 		_filename = file;
@@ -45,8 +46,30 @@ public class InputFile {
 		}
 		return _mainCellNumber;
 	}
+	
+	public int getNotesCellNumber()
+	{
+		if (_notesCellNumber == -1) {
+			_notesCellNumber = calculateNotesCellNumber();
+		}
+		return _notesCellNumber;
+	}
+	
+	private int calculateNotesCellNumber()
+	{
+		for (int i = 0; i < _inputRecords.get(0)._cells.size(); i++) {
+			if (_inputRecords.get(0)._cells.get(i).toLowerCase().contains("notes"))
+				return i;
+		}
+		return _inputRecords.get(0)._cells.size()-1;
+	}
 
 	private int calculateMainCellNumber() {
+		for (int i = 0; i < _inputRecords.get(0)._cells.size(); i++) {
+			if (_inputRecords.get(0)._cells.get(i).toLowerCase().contains("transcription"))
+				return i;
+		}
+		
 		List<Integer> fieldSizes = new ArrayList<>();
 		for (int i = 0; i < _inputRecords.get(0)._cells.size(); i++) {
 			fieldSizes.add(Integer.valueOf(0));
@@ -92,18 +115,27 @@ public class InputFile {
 					cells.add(outputRecord._forename);
 					cells.add(outputRecord._surname);
 					cells.add(Boolean.valueOf(outputRecord._bornCirca).toString());
-					cells.add(String.format("%d", outputRecord._bornDay));
-					cells.add(String.format("%d", outputRecord._bornMonth));
-					cells.add(String.format("%d", outputRecord._bornYear));
-					cells.add(String.format("%d", outputRecord._diedDay));
-					cells.add(String.format("%d", outputRecord._diedMonth));
-					cells.add(String.format("%d", outputRecord._diedYear));
+					
+//					addNonZeroCell(cells,outputRecord._bornDay);
+//					addNonZeroCell(cells,outputRecord._bornMonth);
+					addNonZeroCell(cells,outputRecord._bornYear);
+//					addNonZeroCell(cells,outputRecord._diedDay);
+//					addNonZeroCell(cells,outputRecord._diedMonth);
+					addNonZeroCell(cells,outputRecord._diedYear);
 					map.add(cells.toArray(new String[cells.size()]));
 					
 				}
 
 		}
 		return map;
+	}
+	
+	private void addNonZeroCell(List<String> cells,int value)
+	{
+		if (value!=0)
+			cells.add(String.format("%d", value));
+		else
+			cells.add("");
 	}
 
 	private void addPrefixCells(List<String> destination, InputRecord inputRecord) {
@@ -115,7 +147,11 @@ public class InputFile {
 		// then the originals
 		for (int i = 0; i < _inputFields.size(); i++) {
 			if (_inputFields.get(i)._outputField) {
-				destination.add(inputRecord._cells.get(i));
+				String data = inputRecord._cells.get(i).trim();
+				if (data.endsWith("/"))
+					data = data.substring(0,data.length()-1);
+				
+				destination.add(data);
 			}
 		}
 	}

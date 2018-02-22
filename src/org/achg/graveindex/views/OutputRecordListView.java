@@ -32,12 +32,10 @@ public class OutputRecordListView implements IOutputRecordListener {
 	private Text _forenameTxt;
 	private Text _surnameTxt;
 	private Button _circaCheckbox;
-	private Text _bornDayTxt;
-	private Text _bornMonthTxt;
+	
 	private Text _bornYearTxt;
 
-	private Text _diedDayTxt;
-	private Text _diedMonthTxt;
+	
 	private Text _diedYearTxt;
 
 	@PostConstruct
@@ -134,50 +132,14 @@ public class OutputRecordListView implements IOutputRecordListener {
 		_circaCheckbox.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (_circaCheckbox.getSelection()) {
-					_bornDayTxt.setEnabled(false);
-					_bornMonthTxt.setEnabled(false);
-				} else {
-					_bornDayTxt.setEnabled(true);
-					_bornMonthTxt.setEnabled(true);
-				}
+				
 				refreshTables();
 			}
 		});
 
-		lab = new Label(viewParent, SWT.NONE);
-		lab.setText("Birth day of month:");
+		
 
-		_bornDayTxt = new Text(viewParent, SWT.BORDER);
-		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-		_bornDayTxt.setLayoutData(gd);
-		_bornDayTxt.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (_currentOutputRecord != null) {
-					_currentOutputRecord._bornDay = IntegerUtils.safeParseInt(_bornDayTxt.getText());
-					refreshTables();
-				}
-			}
-		});
-
-		lab = new Label(viewParent, SWT.NONE);
-		lab.setText("Birth month:");
-
-		_bornMonthTxt = new Text(viewParent, SWT.BORDER);
-		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-		_bornMonthTxt.setLayoutData(gd);
-		_bornMonthTxt.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (_currentOutputRecord != null) {
-					_currentOutputRecord._bornMonth = IntegerUtils.safeParseInt(_bornMonthTxt.getText());
-					refreshTables();
-				}
-			}
-		});
+		
 
 		lab = new Label(viewParent, SWT.NONE);
 		lab.setText("Birth year:");
@@ -196,39 +158,7 @@ public class OutputRecordListView implements IOutputRecordListener {
 			}
 		});
 
-		lab = new Label(viewParent, SWT.NONE);
-		lab.setText("Death day of month:");
-
-		_diedDayTxt = new Text(viewParent, SWT.BORDER);
-		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-		_diedDayTxt.setLayoutData(gd);
-		_diedDayTxt.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (_currentOutputRecord != null) {
-					_currentOutputRecord._diedDay = IntegerUtils.safeParseInt(_diedDayTxt.getText());
-					refreshTables();
-				}
-			}
-		});
-
-		lab = new Label(viewParent, SWT.NONE);
-		lab.setText("Death month:");
-
-		_diedMonthTxt = new Text(viewParent, SWT.BORDER);
-		gd = new GridData(SWT.FILL, SWT.TOP, true, false);
-		_diedMonthTxt.setLayoutData(gd);
-		_diedMonthTxt.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				if (_currentOutputRecord != null) {
-					_currentOutputRecord._diedMonth = IntegerUtils.safeParseInt(_diedMonthTxt.getText());
-					refreshTables();
-				}
-			}
-		});
+	
 
 		lab = new Label(viewParent, SWT.NONE);
 		lab.setText("Death year:");
@@ -261,27 +191,14 @@ public class OutputRecordListView implements IOutputRecordListener {
 			_forenameTxt.setText(_currentOutputRecord._forename);
 			_surnameTxt.setText(_currentOutputRecord._surname);
 			_circaCheckbox.setSelection(_currentOutputRecord._bornCirca);
-			if (_currentOutputRecord._bornDay > 0)
-				_bornDayTxt.setText(String.format("%d", _currentOutputRecord._bornDay));
-			else
-				_bornDayTxt.setText("");
-			if (_currentOutputRecord._bornMonth > 0)
-				_bornMonthTxt.setText(String.format("%d", _currentOutputRecord._bornMonth));
-			else
-				_bornMonthTxt.setText("");
+		
+			
 			if (_currentOutputRecord._bornYear > 0)
 				_bornYearTxt.setText(String.format("%d", _currentOutputRecord._bornYear));
 			else
 				_bornYearTxt.setText("");
 
-			if (_currentOutputRecord._diedDay > 0)
-				_diedDayTxt.setText(String.format("%d", _currentOutputRecord._diedDay));
-			else
-				_diedDayTxt.setText("");
-			if (_currentOutputRecord._diedMonth > 0)
-				_diedMonthTxt.setText(String.format("%d", _currentOutputRecord._diedMonth));
-			else
-				_diedMonthTxt.setText("");
+		
 			if (_currentOutputRecord._diedYear > 0)
 				_diedYearTxt.setText(String.format("%d", _currentOutputRecord._diedYear));
 			else

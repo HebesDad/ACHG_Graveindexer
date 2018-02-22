@@ -20,9 +20,9 @@ public class OutputRecordResultsLabelProvider extends LabelProvider {
 			}
 			else
 			{
-				sb.append(String.format("born %d/%d/%d, ", record._bornDay,record._bornMonth,record._bornYear));
+				sb.append(String.format("born %d, ", record._bornYear));
 			}
-			sb.append(String.format("died %d/%d/%d", record._diedDay,record._diedMonth,record._diedYear));
+			sb.append(String.format("died %d", record._diedYear));
 			
 			
 			return sb.toString();
