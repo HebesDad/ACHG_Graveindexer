@@ -17,7 +17,7 @@ public class OutputRecordDetailExtractor {
 	private static Pattern FULLNAME_BIRTH_DEATH_YYYY = Pattern
 			.compile(FORENAME_SURNAME + "\\s\\D*" + YYYY + "\\D*" + YYYY);
 	private static Pattern FULLNAME_DEATH_AGED = Pattern
-			.compile(FORENAME_SURNAME + "\\s\\D*" + NN_MONTH_YYYY + "\\s+[aA]ged\\s(\\d+)");
+			.compile(FORENAME_SURNAME + "\\s\\D*" + NN_MONTH_YYYY + "[,]?\\s+[aA]ged\\s(\\d+)");
 	private static Pattern FORENAME_BIRTH_DEATH_FULLDATES = Pattern
 			.compile(FORENAME + "\\s\\D*" + NN_MONTH_YYYY + "\\D*" + NN_MONTH_YYYY);
 	private static Pattern FORENAME_BIRTH_DEATH_YYYY = Pattern
